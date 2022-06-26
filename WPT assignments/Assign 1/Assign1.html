@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script>
+        const arr = [1,2,3,4,5,6,7,8,9,10];
+
+        window.addEventListener('DOMContentLoaded', ()=>{
+            const num = document.querySelector("#checkno");
+
+        num.addEventListener('blur',()=>{
+                console.log("blur event");
+
+                let numb = document.querySelector("#checkno").value;
+                console.log("input is" + numb);
+                let output=getnumberLogic(numb);
+
+                if(output.result)
+                {
+                    document.querySelector("#msg").innerText="Number found";
+                    document.querySelector("#add").disabled=true;
+                    document.querySelector("#edit").disabled=false;
+                    document.querySelector("#delete").disabled=false;
+                    document.querySelector("#view").disabled=true;
+                    document.querySelector("#showaddpos").disabled=true;
+                }
+                else
+                {
+
+                    document.querySelector("#msg").innerText="Number not  found";
+                    document.querySelector("#add").disabled=false;
+                    document.querySelector("#edit").disabled=true;
+                    document.querySelector("#delete").disabled=true;
+                    document.querySelector("#view").disabled=true;
+                    document.querySelector("#showaddpos").disabled=true;
+                }
+
+            });
+
+
+            const add = document.querySelector("#add");
+            add.addEventListener('click',()=>{
+                console.log("add event");
+                let numb = document.querySelector("#checkno").value;
+                let output=getnumberLogic(numb);
+                
+                if(output.result)
+                { 
+                    document.querySelector("#msg").innerText="Number already present";
+                    document.querySelector("#add").disabled=true;
+                    document.querySelector("#edit").disabled=true;
+                    document.querySelector("#delete").disabled=true;
+                    document.querySelector("#view").disabled=true;
+                    document.querySelector("#showaddpos").disabled=true;
+                }
+                else{
+
+                    document.querySelector("#msg").innerText="Number Added";
+                    arr.push(numb);
+                    console.log(arr);
+                    document.querySelector("#add").disabled=true;
+                    document.querySelector("#edit").disabled=true;
+                    document.querySelector("#delete").disabled=true;
+                    document.querySelector("#view").disabled=true;
+                    document.querySelector("#showaddpos").disabled=true;
+                }
+            });
+
+
+
+            const edit = document.querySelector("#edit");
+            edit.addEventListener('click',()=>{
+                console.log("edit event");
+                let numb = document.querySelector("#checkno").value;
+                let output=getnumberLogic(numb);
+                const aNumber = Number(window.prompt("Type a number", ""));
+                if(aNumber==numb)
+                {
+                    console.log(arr);
+                }
+                else{
+                 
+                    document.querySelector("#msg").innerText="Number Edited";
+                    numb=aNumber
+                    document.querySelector("#checkno").value=numb;
+                    console.log(arr);
+                  
+                }
+
+            });
+
+
+
+        
+            const delet = document.querySelector("#delete");
+            delet.addEventListener('click',()=>{
+                console.log("delete event");
+                const numb = document.querySelector("#checkno").value;
+                let output=getnumberLogic(numb);
+                console.log(numb);
+                const index= arr.indexOf(numb);
+                        console.log(index);
+                    for( var i = 0; i < arr.length; i++){ 
+    
+                    if ( arr[i] == numb) { 
+                       
+                        arr.splice(index, 1); 
+                         }
+                    }
+
+                    console.log(arr); 
+            });
+
+            const viewall = document.querySelector("#view");
+            view.addEventListener('click',()=>{
+                    console.log(arr);
+            });
+
+                const showodd = document.querySelector("#showaddpos");
+                showodd.addEventListener('click',()=>{
+
+                    for(let i=0; i < arr.length; i=i+2)
+                        {
+                            console.log(arr[i]);
+                        }
+
+
+                    });
+
+
+
+                function getnumberLogic(numb)
+                {
+                        let output ={ result:false};
+                        for(let i=0; i < arr.length; i++)
+                        {
+                            if(arr[i] == numb )
+                                {	
+	                                output.result=true;
+	                                
+	                                                break;
+                                }
+                            
+
+                        }
+                            return output;
+                }
+            });
+
+    </script>
+
+</head>
+<body>
+  
+    <input type="text" id="checkno" > <span id="msg"> what happened</span>
+    <Br/></br><button id="add" disabled> add</button>
+    <button id="edit" disabled> edit </button>
+    <button id="delete" disabled> delete</button>
+    <button id="view" disabled> view</button>
+    <button id="showaddpos" disabled>show add positions </button>
+<script>  
+</script>
+</body>
+</html>

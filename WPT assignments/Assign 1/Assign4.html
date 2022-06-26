@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <script>
+
+        class ItemStatus
+        {
+        constructor(status,itemobject)
+        {
+        this.status=false;
+        this.itemobject=itemobject;
+        }
+        
+        };
+        
+        class Item
+        {
+        constructor(empno,empname,deptid,email)
+        {
+        this.empno=empno;
+        this.empname=empname;
+        this.deptid=deptid;
+        this.email=email;
+        }
+
+        setItemDetails(empno,empname,deptid,email)
+        {
+            this.empno=empno;
+            this.empname=empname;
+            this.deptid=deptid;
+            this.email=email;
+        }
+
+        getItemDetails()
+        {
+            return this.empno +  "--" + this.empname + "--"  +
+        this.deptno + "--" + this.email;	
+        }
+        }
+
+        class Logic
+        {
+
+        constructor(){ 
+
+        this.items=[ new Item(1,"pranjal",5,"pranjal123@gmail.com"),
+            new Item(2,"pranali",3,"pranali123@gmail.com"),
+            new Item(3,"pratik",2,"pratik123@gmail.com"),
+            new Item(4,"prachi",4,"prachi123@gmail.com") ]; //assume this is 
+
+
+        }
+
+        getItemDetailsLogic(empno)
+        {
+        let output =new ItemStatus(false,{});
+        for(let i=0; i < this.items.length; i++)
+        {
+        if(this.items[i].empno == empno )
+        {	
+            output.result=true;
+            output.itemdetails=this.items[i];
+            break;
+        }
+
+        }
+        return output;
+        }
+
+
+        updateItemDetailsLogic(updateditem)
+        {
+        console.log(updateditem.empno);
+        let output =false;
+        for(let i=0; i < this.items.length; i++)
+        {
+        if(this.items[i].empno == updateditem.empno )
+        {	
+
+            this.items[i].setItemDetails(updateditem.empno,updateditem.empname,updateditem.deptid,updateditem.email);
+            output=true;
+            break;
+        }
+
+        }
+        console.log("inside update function" + output);
+        return output;
+        }
+
+         removeItemDetailsLogic(empno)
+        {
+        let output =false;
+        for(let i=0; i < this.items.length; i++)
+        {
+        if(this.items[i].empno == empno )
+        {	
+            this.items.splice(i,1); // which position, how many elements to remove
+            output=true;
+            break;
+        }
+
+        }
+        console.log("inside delte function" + output);
+        return output;
+        }
+
+        getAllItems()
+        {
+        return this.items;
+        }
+
+
+        }
+
+
+
+
+
+        
+window.addEventListener('DOMContentLoaded', ()=>{
+
+
+let logic = new Logic();
+showAllItems();
+
+
+const empno = document.querySelector("#empno");
+        empno.addEventListener('blur',()=>{
+        console.log("blur event");
+
+        let empno= document.querySelector("#empno").value;
+        console.log("input is" + empno);
+        let output= logic.getItemDetailsLogic(empno);
+
+        if(output.result)
+        {
+            document.querySelector("#empname").value=output.itemdetails.empname;
+            document.querySelector("#deptid").value=output.itemdetails.deptid;
+            document.querySelector("#email").value=output.itemdetails.email;
+            
+            document.querySelector("#add").disabled=true;
+            document.querySelector("#modify").disabled=false;
+            document.querySelector("#remove").disabled=false;
+            document.querySelector("#view").disabled=true;
+            document.querySelector("#viewid").disabled=true;
+            document.querySelector("#msg").innerText="Employee details found";
+
+        }
+        else
+        {
+            console.log("no item was found");
+            document.querySelector("#add").disabled=false;
+            document.querySelector("#modify").disabled=true;
+            document.querySelector("#remove").disabled=true;
+            document.querySelector("#view").disabled=true;
+            document.querySelector("#viewid").disabled=true;
+            document.querySelector("#msg").innerText="Employee no not found";
+            document.querySelector("#empname").value="";
+            document.querySelector("#deptid").value="";
+            document.querySelector("#email").value="";
+            
+        }
+
+    });
+
+
+
+ const modiy = document.querySelector("#modify");
+modify.addEventListener('click',()=>{
+
+let input= {empno:document.querySelector("#empno").value,
+empname:document.querySelector("#empname").value,
+deptno:document.querySelector("#deptid").value,
+email:document.querySelector("#email").value};
+console.log(input);
+let output=logic.updateItemDetailsLogic(input);
+
+if(output)
+{
+    document.querySelector("#msg").innerText="update suceeded";
+    // document.querySelector("#modify").disabled=true;
+	// document.querySelector("#remove").disabled=true;
+	// document.querySelector("#clear").disabled=true;
+	document.querySelector("#empno").value="";
+	document.querySelector("#empname").value="";
+	document.querySelector("#deptid").value="";
+    document.querySelector("#email").value="";
+
+}
+else
+{
+document.querySelector("#msg").innerText="update failed";
+
+document.querySelector("#update").disabled=true;
+document.querySelector("#add").disabled=true;
+
+	document.querySelector("#remove").disabled=true;
+	document.querySelector("#view").disabled=true;
+    document.querySelector("#viewid").disabled=true;
+
+
+}
+
+});
+
+const deletebutton = document.querySelector("#remove");
+deletebutton.addEventListener('click',()=>{
+let input= document.querySelector("#empno").value;
+console.log(input);
+let output=logic.removeItemDetailsLogic(input);
+
+console.log("after remove function" + output);
+
+
+if(output)
+{
+document.querySelector("#msg").innerText="delete suceeded ";
+document.querySelector("#modify").disabled=true;
+	document.querySelector("#remove").disabled=true;
+	document.querySelector("#view").disabled=true;
+	document.querySelector("#empno").value="";
+	
+	document.querySelector("#empname").value="";
+	document.querySelector("#deptid").value="";
+    document.querySelector("#email").value="";
+
+}
+else
+{
+document.querySelector("#msg").innerText="delete failed";
+
+document.querySelector("#modify").disabled=true;
+	document.querySelector("#remove").disabled=true;
+	document.querySelector("#view").disabled=true;
+	document.querySelector("#empno").value="";
+	
+
+}
+showAllItems();
+
+});
+
+
+function showAllItems(empno)
+        {
+
+        console.log("show all items");
+            
+            
+            let output=logic.getAllItems();
+            let msg="";
+            for(let i=0; i < output.length; i++) //dinosaur way..
+            msg+= "<Br/>" + output[i].empno +  " --- " + output[i].empname +
+            "--"+ output[i].deptid+ " --- "+output[i].email;
+            
+            document.querySelector("#contents").innerHTML=msg;
+
+
+        }
+
+
+});
+
+
+
+</script>
+</head>
+<body>
+
+    <h1> so called Item ( focus on classes) </h1>
+    <hr/>
+    <input type="text" id="empno" placeholder="empno "/>  <span id="msg"> what happened</span>
+    <Br/><input type="text" id="empname" placeholder="empname"/>
+    <Br/><input type="text" id="deptid" placeholder="deptid"/>
+    <Br/><input type="text" id="email" placeholder="email"/>
+
+    <Br/><button id="add" disabled> add employee</button>
+    <button id="modify" disabled> modify employee details  </button>
+    <button id="remove" disabled> remove details </button>
+    <button id="view" disabled> view all details </button>
+    <button id="viewid" disabled> view by dept details </button>
+    
+    <hr/>
+    <p id="contents" > show contents </p> 
+    
+</body>
+
+</html>

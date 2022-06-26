@@ -1,0 +1,181 @@
+<html>
+
+<head>
+    <title>Resources</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script>
+        $(() => {
+            console.log("Jquery ...........");
+
+
+            let resourceAvailable = [];
+            function showResources() {
+                let input = {};
+                let PaasingToAjax = {
+                    data: input,
+                    url: 'http://localhost:321/getAllResources',
+                    type: 'get',
+                    dataType: 'json',
+                    success: (data) => {
+                        resourceAvailable = data;
+                        console.log(resourceAvailable);
+                        let resources = "";
+                        for (let i = 0; i < resourceAvailable.length; i++) {
+                            resources += "<br/>" + resourceAvailable[i].id + " " + resourceAvailable[i].resourcename + " " + resourceAvailable[i].status;
+                        }
+                        $("#msg").html(resources);
+                    },
+                    error: (errorRecieved) => {
+                        console.log(errorRecieved);
+                    }
+                };
+                $.ajax(PaasingToAjax);
+            }
+            let resourceByStatus=[];
+
+            function getResourcesOnStatus() {
+                let input = {status:$("#st").val()};
+                console.log(input);
+                let PaasingToAjax = {
+                    data: input,
+                    url: 'http://localhost:321/getResourcesOnStatus',
+                    type: 'get',
+                    dataType: 'json',
+                    success: (data) => {
+                        resourceAvailable = data;
+                        console.log(resourceAvailable);
+                        let resources = "";
+                        for (let i = 0; i < resourceAvailable.length; i++) {
+                            resources += "<br/>" + resourceAvailable[i].id + " " + resourceAvailable[i].resourcename + " " + resourceAvailable[i].status;
+                        }
+                        $("#msg1").html(resources);
+                    },
+                    error: (errorRecieved) => {
+                        console.log(errorRecieved);
+                    }
+                };
+                $.ajax(PaasingToAjax);
+            }
+
+            /Showing all resources/
+            //showResources();
+
+            $("#id").blur(() => {
+
+                let input = { id: $("#id").val() };
+                let passingToAjax = {
+                    data: input,
+                    url: "http://localhost:321/getResources",
+                    type: 'get',
+                    dataType: 'json',
+                    success: (data) => {
+                        if (data.status1 == true) {
+                            $("#msg").html("Resources available");
+                            $("#rname").val(data.resourceDetail.resourcename);
+                            $("#st").val(data.resourceDetail.status);
+                            
+                            /*if (data.resourceDetail.status == 1) {
+                                $("#st").val("true"); 
+                               
+                            }
+                            else {
+                                $("#st").val("false");
+                              
+                            }*/
+                            showResources();
+                            getResourcesOnStatus()
+
+                            
+                            
+                        }
+                        else {
+                            $("#msg").html("Resources not available");
+                            $("#rname").val("");
+                            $("#st").val("");
+                        }
+
+                    },
+                    error: (err) => {
+                        console.log(err);
+                    }
+
+                };
+                $.ajax(passingToAjax);
+            });
+
+            $("#add").click(() => {
+                console.log("in insert event");
+                let input = { id: $("#id").val(), resourcename: $("#rname").val(), status2: $("#st").val() };
+
+                let passingToAjax = {
+                    data: input,
+                    url: "http://localhost:321/insertResources",
+                    type: 'get',
+                    dataType: 'json',
+                    success: (data) => {
+                        if (data.status1 == true) {
+                            $("#msg").html("Resources inserted");
+                            showResources();
+                            getResourcesOnStatus();
+                        }
+                        else {
+                            $("#msg").html("Cannot insert resources");
+                        }
+                    },
+                    error: (err) => {
+                        console.log(err);
+                    }
+
+                };
+                $.ajax(passingToAjax);
+            });
+
+            $("#update").click(() => {
+                console.log("in update event");
+                let input = { id: $("#id").val(), resourcename: $("#rname").val(), status2: $("#st").val() };
+
+                let passingToAjax = {
+                    data: input,
+                    url: "http://localhost:321/updateResources",
+                    type: 'get',
+                    dataType: 'json',
+                    success: (data) => {
+                        if (data.status1 == true) {
+                            $("#msg").html("Resources updated");
+                            showResources();
+                            getResourcesOnStatus();
+                        }
+                        else {
+                            $("#msg").html("Cannot update resources");
+                        }
+                    },
+                    error: (err) => {
+                        console.log(err);
+                    }
+
+                };
+                $.ajax(passingToAjax);
+            });
+
+
+
+        });
+    </script>
+</head>
+
+<body>
+    <input type="text" id="id" placeholder="resource id">
+    <br><br>
+    <input type="text" id="rname" placeholder="resource name">
+    <br><br>
+    <input type="text" id="st" placeholder="status">
+    <br><br>
+    <input type="button" id="add" value="insert">
+    <input type="button" id="update" value=" update ">
+    <br><br>
+    Resources:<span id="msg">---------</span><br><br>
+    Resources by status:<span id="msg1">---------</span>
+</body>
+
+</html>
